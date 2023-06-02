@@ -34,9 +34,32 @@
                 "navigationBarTitleText": "",
                 "enablePullDownRefresh": false
             }
-            
         }
     ],
+		"subPackages": [
+			{
+				"root": "package",
+				"pages": [
+                {
+                    "path" : "goods_detail/goods_detail",
+                    "style" :                                                                                    
+									{
+                    "navigationBarTitleText": "",
+                    "enablePullDownRefresh": false
+									}
+                }
+                ,{
+                    "path" : "good_list/good_list",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+            ]
+			}
+		],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "优选",

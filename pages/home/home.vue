@@ -1,5 +1,8 @@
 <template>
 	<view>
+		<view class="search_box">
+			<my-search @myclick.native="handleSearch"></my-search>
+		</view>
 		<!-- 轮播图区域 -->
 		<swiper :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000" :circular="true">
 			<swiper-item v-for="(item,index) in swiperList" :key="item.goods_id">
@@ -83,12 +86,23 @@
 				if(name==='分类') uni.switchTab({
 					url: '/pages/cate/cate'
 				})
+			},
+			
+			handleSearch(){
+				uni.navigateTo({
+					url: '/package/search/search'
+				})
 			}
 		}
 	}
 </script>
 
 <style lang="scss">
+.search_box{
+	position: sticky;
+	top: 0;
+	z-index: 999;
+}
 swiper{
 	height: 330rpx;
 	

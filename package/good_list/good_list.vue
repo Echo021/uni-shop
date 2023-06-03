@@ -34,6 +34,7 @@
 				if(res.meta.status!=200) return uni.$showMessage()
 				this.goodsList=[...res.message.goods,...this.goodsList];
 				this.total=res.message.total
+				uni.stopPullDownRefresh()
 			},
 			gotoDetail(id){
 				uni.navigateTo({

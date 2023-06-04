@@ -1,4 +1,5 @@
 import App from './App'
+import store from '@/store/store'
 
 // #ifndef VUE3
 import Vue from 'vue'
@@ -32,7 +33,8 @@ uni.$showMessage=function(title="数据请求失!",duration=1500){
 Vue.config.productionTip = false
 App.mpType = 'app'
 const app = new Vue({
-  ...App
+  ...App,
+	store
 })
 app.$mount()
 // #endif

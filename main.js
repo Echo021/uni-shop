@@ -15,6 +15,10 @@ $http.beforeRequest = function (options) {
   uni.showLoading({
   	"title":"加载中。。。"
   })
+	console.log(options,"options")
+	if(options.url.indexOf('/my/')!==-1){
+		Authorization: store.state.m_addr.token
+	}
 }
 
 $http.afterRequest = function () {

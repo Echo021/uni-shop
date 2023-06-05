@@ -41,6 +41,7 @@
 				if(res.errMsg==="chooseAddress:ok"){
 					this.updataAdress(res)
 				}
+				
 			}
 		},
 	}

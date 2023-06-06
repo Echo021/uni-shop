@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<my-search></my-search>
+		<my-search @click.native="handleSearch"></my-search>
 		<view class="scroll_view">
 			<!-- 左边滚动区 -->
 			<scroll-view class="left_scroll_view" scroll-y="true" :style="{height: wh +'px'}">
@@ -65,6 +65,11 @@
 			gotoGoodList(id){
 				uni.navigateTo({
 					url: `/package/good_list/good_list?cid=${id}`
+				})
+			},
+			handleSearch(){
+				uni.navigateTo({
+					url: '/package/search/search'
 				})
 			}
 		}

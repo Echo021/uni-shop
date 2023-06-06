@@ -18,7 +18,7 @@
 				},
 				total: 0,
 				goodsList:[],
-				loading: false
+				loading: false,
 			};
 		},
 		onLoad(option){

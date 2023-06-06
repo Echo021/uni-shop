@@ -85,6 +85,10 @@
 <style lang="scss">
 .search_container{
 	background-color: #ff6d00;
+	position: sticky;
+	top: 0;
+	left: 0;
+	z-index: 9;
 }
 .search_result_list{
 	padding: 0 5px;

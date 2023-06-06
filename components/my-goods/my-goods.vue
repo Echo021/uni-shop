@@ -25,12 +25,23 @@
 			showRadio:{
 				type: Boolean,
 				default: false
+			},
+			flag:{
+				type: Boolean,
+				value: false
 			}
 		},
 		data() {
 			return {
 				
 			};
+		},
+		watch:{
+			flag(){
+				this.$emit('delete',{
+					id:this.good.goods_id
+				})
+			}
 		},
 		methods:{
 			radioClickHandle(){

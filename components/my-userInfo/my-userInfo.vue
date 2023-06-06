@@ -1,13 +1,14 @@
 <template>
 	<view class="my_userInfo_container">
 		<view class="avator_box">
-			<image :src="userInfo.avatarUrl" class="avator_img"></image>
+			<image :src="avator||userInfo.avatarUrl" class="avator_img" @click="previewImage"></image>
+			<uni-icons type="camera-filled" size="30" class="avator_icon" @click="changeAvator"></uni-icons>
 			<text>{{userInfo.nickName}}</text>
 		</view>
 		
 		<view class="panel">
 			<view class="panel_item">
-				<view class="top_list" v-for="(item,index) in first_list" :key="index">
+				<view class="top_list" v-for="(item,index) in first_list" :key="index" @click="gotoDetail(index)">
 					<text>{{item.num}}</text>
 					<text class="panel_name">{{item.name}}</text>
 				</view>
@@ -58,18 +59,18 @@
 </template>
 
 <script>
-	import {mapState, mapMutations} from 'vuex'
+	import {mapState, mapMutations,mapGetters} from 'vuex'
 	export default {
 		name:"my-userInfo",
 		data() {
 			return {
 				first_list:[
 					{
-						num: 8,
+						num: 0,
 						name: '收藏的店铺'
 					},
 					{
-						num: 14,
+						num: 0,
 						name: '收藏的商品'
 					},
 					{
@@ -81,10 +82,21 @@
 						name: '足迹'
 					}
 				],
+				avator: ''
 			};
 		},
 		computed:{
-			...mapState('m_addr',['userInfo'])
+			...mapState('m_addr',['userInfo']),
+			...mapState('m_collect',['collectGoods','collectNum']),
+		},
+		watch:{
+			collectNum:{
+				handler(newVal,oldVal){
+					this.first_list[1].num = newVal
+				},
+				immediate: true,
+				deep:true
+			}
 		},
 		methods:{
 			...mapMutations('m_addr',['updataAdress','updateUserInfo','updateToken']),
@@ -98,6 +110,35 @@
 					this.updateUserInfo({})
 					this.updateToken('')
 				}
+			},
+			async changeAvator(){
+				const res = await uni.chooseImage({
+					count: 1, //默认9
+					sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
+					sourceType: ['album','camera'], //从相册选择
+					crop:{
+						height: 100,
+						width: 100
+					},
+				});
+				
+				if(res.errMsg==="chooseImage:ok"){
+					this.avator = res.tempFilePaths[0]
+					this.updateUserInfo({...this.userInfo,"avatarUrl":res.tempFilePaths[0]})
+				}else{
+					return uni.$showMessage('选择头像失败！')
+				}
+			},
+			previewImage(){
+				this.avator && uni.previewImage({
+					urls: [this.avator]
+				})
+			},
+			gotoDetail(index){
+				const urls =['','/package/collect_goods/collect_goods','','']
+				uni.navigateTo({
+					url: urls[index]
+				})
 			}
 		}
 	}
@@ -122,6 +163,12 @@
 			border-radius: 50%;
 			box-shadow: 0 1px 5px black;
 			margin-bottom: 5px;
+		}
+		
+		.avator_icon{
+			position: absolute;
+			top: 135px;
+			right: 140px;
 		}
 		
 		text{
@@ -155,11 +202,13 @@
 		
 		.panel_bottom{
 			flex-direction: column;
+			padding-left: 15px;
 			.bottom_list{
+				width: 100%;
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
-				line-height: 45px;
+				line-height: 40px;
 			}
 		}
 	}

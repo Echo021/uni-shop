@@ -62,6 +62,15 @@
                 }
                 
                 }
+                ,{
+                    "path" : "collect_goods/collect_goods",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
             ]
 			}
 		],

@@ -1,5 +1,5 @@
 <template>
-	<view v-if="goodDetail" style="padding-bottom: 50px;">
+	<view v-if="goodDetail" style="padding-bottom: 50px;" @delete="deleteCollect">
 		<swiper :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000" :circular="true">
 			<swiper-item v-for="(item,index) in goodDetail.pics" :key="item.goods_id">
 				<image :src="item.pics_big" @click="preview(index)"></image>
@@ -22,7 +22,7 @@
 		<rich-text :nodes="goodDetail.goods_introduce"></rich-text>
 		
 		<view class="good_nav">
-			<uni-goods-nav :fill="true"  :options="options" :buttonGroup="buttonGroup"  @click="onClick" @buttonClick="buttonClick" />			
+			<uni-goods-nav :fill="true"  :options="options" :buttonGroup="buttonGroup"  @click="onClick" @buttonClick="buttonClick"/>			
 		</view>
 	</view>
 </template>
@@ -31,7 +31,8 @@
 	import {mapState,mapMutations,mapGetters} from 'vuex'
 	export default {
 		computed:{
-				...mapGetters('m_cart',['total'])
+				...mapGetters('m_cart',['total']),
+				...mapState('m_collect',['collectGoods'])
 		},
 		watch:{
 			total:{
@@ -48,6 +49,7 @@
 			return {
 				goods_id: '',
 				goodDetail: null,
+				collected: true,
 				options: [{
 					icon: 'shop',
 					text: '店铺',
@@ -55,6 +57,9 @@
 					icon: 'cart',
 					text: '购物车',
 					info: 0
+				},{
+					icon: 'star',
+					text: '收藏',
 				}],
 				buttonGroup: [{
 					text: '加入购物车',
@@ -73,6 +78,7 @@
 		},
 		methods:{
 			...mapMutations('m_cart',['addToCart']),
+			...mapMutations('m_collect',['updateCollectGoods','cacelCollect']),
 			
 			async getGoodDetailInfo(goods_id){
 				const {data:res} = await uni.$http.get('/api/public/v1/goods/detail',{goods_id})
@@ -92,6 +98,24 @@
 				if(e.content.icon=='cart') uni.switchTab({
 					url: '/pages/cart/cart'
 				})
+				if(e.content.icon=='star'){
+					const {goods_id,goods_name,goods_price,goods_small_logo} = this.goodDetail
+					const goods ={
+						goods_count: 1,
+						goods_id,
+						goods_name,
+						goods_price,
+						goods_status: true,
+						goods_small_logo
+					};
+					if([...this.collectGoods].some(item=>item.goods_id==goods_id)) {
+						this.deleteCollect(goods_id)
+						return uni.$showMessage('取消收藏！')
+					}
+					
+					this.updateCollectGoods(goods)
+					uni.$showMessage('收藏成功！')
+				}
 			},
 			
 			buttonClick(e){
@@ -107,6 +131,9 @@
 					};
 					this.addToCart(goods)
 				}
+			},
+			deleteCollect(id){
+				this.cacelCollect(id)
 			}
 		}
 	}
